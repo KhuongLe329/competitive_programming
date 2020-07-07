@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem</title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat Alternates' rel='stylesheet'>
+    <link rel = "stylesheet" href = "css/ceoi2019_diameter.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://mathscribe.com/mathscribe/jqmath-0.4.3.css" />
+    <script src="https://mathscribe.com/mathscribe/jqmath-etc-0.4.3.min.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+<body background="">
+    <h1 id = "problem_name">Dynamic diameter - CEOI 2019 </h1>
+    <a id = "problem_source" href = "https://oj.uz/problem/view/CEOI19_diameter">source</a>
+    <div class = "problem">
+        Tóm tắt đề bài
+        <div class = "main_problem">
+            Cho cây có trọng số gồm <b>n</b> đỉnh và <b>q</b> thao tác cập nhật. Ở mỗi thao tác 
+            bạn phải thay đổi trọng số 1 cạnh, sau đó in ra đường kính của cây. Yêu cầu cập nhật online.<br>
+            Giới hạn: $ 1 &LessSlantEqual; n, q &LessSlantEqual; 10^5, 1 &LessSlantEqual; w &LessSlantEqual; 2.10^13$
+        </div>
+    </div>
+    <div class = "brute_solution">
+        <div class = "brute">Lời giải O($q. log_2 ^2 n$):</div>
+        <div class = "brute_show">
+            Centroid decomposition cây ban đầu, do đó mỗi cạnh sẽ thuộc tối đa $log_2 n$ cây con do đó mỗi cây con gốc u
+            ta lưu một segment tree mỗi nút lưu khoảng cách từ u đến nút con của cạnh $e_i$. Với mỗi truy vấn cập nhật 
+            cạnh ta duyệt hết các cây con chứa cạnh đó và truy vấn lại đường kính của các cây đó.<br> 
+            <a href="https://oj.uz/submission/240012">Code mẫu</a>
+        </div>
+    </div>
+    <div class = "main_solution">
+        <div class = "main">Lời giải O($q. log_2 n$):</div>
+        <div class = "main_show">
+            <div>
+                <img src = "img/ceoi2019_diameter.png"/>
+            </div>
+            Ta sẽ có dãy DFS: 1 2 3 5 3 4 3 2 6 2 1<br/>
+            coi vị trí đầu tiên xuất hiện của đỉnh $u$ là $in$, các lần xuất hiện khác là $out$, để tính khoảng cách giữa
+            2 đỉnh $(u, v)$ ta chỉ việc lấy $d_{in_u} + d_{in_v} - max d_{out_x}, in_u &LessSlantEqual; out_x &LessSlantEqual; in_v$
+            với $d_{in_u} = d_{out_u}$ là khoảng cách từ gốc đến u. Dễ thấy đường kính là bộ 3 số x, y, z sao cho x - 2 * y + z là max.
+            <br>
+            <a href="https://oj.uz/submission/245367">Code mẫu</a>
+        </div>
+    </div>
+    <script src = "js/ceoi2019_diameter.js"></script>
+</body>
+</html>
