@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitive programming</title>
+    <link href="css/dp_tricks_tutorial.css" rel = "stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://mathscribe.com/mathscribe/jqmath-0.4.3.css" />
+    <script src="https://mathscribe.com/mathscribe/jqmath-etc-0.4.3.min.js"></script>
+</head>
+<body>
+    <div class = "container">
+        <div class = "intro">
+            <div class = "ava">
+                <img src = "img/ava.jpg">
+            </div>
+            <h2>CSP </h2>
+            <p id = "quote">CẦN CÙ BÙ SIÊNG NĂNG</p>
+        </div>
+        <div class = "problems">
+            <h2>1D/1D optimization</h2>
+            Phương pháp tối ưu qhđ có dạng: <br>
+            $$f(x) = {min}↙{i=0}↖{x-1} f(i) + w(i, x)$$<br>    
+            Công thức khá quen thuộc với mọi người. Tuy nhiên, khi thoả mãn 1 số điều kiện, ta có thể giải bài toán 
+            trong $O(n.log_n)$ <br>
+            $$ ∀i &LessSlantEqual; j, w(i, j) + w(i + 1, j + 1) &LessSlantEqual; w(i + 1, j) + w(i, j + 1) $$ <br>
+            Hay còn gọi là bất đẳng thức tứ giác.<br>
+            $$k(x) = arg {min}↙{i=0}↖{x-1} f(i) + w(i, x)$$ 
+            $$∀i &LessSlantEqual; j, k(i) &LessSlantEqual; k(j) $$ 
+            Giả sử bất đẳng thức tứ giác được thoả mãn (ta có thể viết thử mấy giá trị của w).<br>
+            Cách đơn giản nhất ta nghĩ đến để tối ưu f(x) là ta for từ k(x - 1) thay vì 1. Tuy nhiên, việc này chỉ làm
+            giảm số hằng số, không làm giảm thời gian thực hiện thuật toán.<br>
+            Ta vẫn luôn nghĩ "với mỗi x, k(x) là bao nhiêu?" Nhưng giờ hãy nghĩ "với mỗi i, những giá trị x nào cho ta
+            k(x) = i?"<br>
+            Ban đầu, chưa có thông tin gì nên mọi x đều có k(x) = 1.
+            <br>k = 1111111111111111111111111111111111111111111<br>
+            Sau khi ta tính f(2), chúng ta có thể duyệt lại các x, cập nhật lại k(x) xem 2 tốt hơn hay 1 tốt hơn. Nhưng
+            lưu ý dãy k sẽ có dạng
+            <br>k = 1111111111111111222222222222222222222222222<br>
+            Điều này có nghĩa là ta có thể chặt nhị phân điểm nhỏ nhất có k(x) = i. Sau đó ta tính giá trị f(3) và cập nhật 
+            lại dãy k. Khi đó dãy k sẽ có 1 trong 2 dạng sau:
+            <br>k = 1111111111133333333333333333333333333333333<br>
+            k = 1111111111111111222222222223333333333333333<br>
+            Do đó các việc cần làm khi cập nhật k với f(3) là:<br>
+            • Kiểm tra xem giá trị x đầu tiên mà k(x) = 2 thay bằng 3 có tốt hơn không <br>
+            • Nếu nó tốt hơn, chặt nhị phân trong vùng k(x) = 1, tìm điểm x đầu tiên sao cho k(x) = 3 tốt hơn k(x) = 1.<br>
+            • Nếu không, chặt nhị phân vùng k(x) = 2.<br>
+            Ta có thể tóm tắt thuật toán như sau. Ta dùng 1 vector để lưu lại giá trị x đầu tiên của mỗi đoạn sao cho k(x) &NotEqual; 
+            k(x - 1). Sau khi ta tính giá trị f(i) ta cập nhật lại vector: <br>
+            • Nếu giá trị i mới tốt hơn vector.back thì vector.pop_back <br>
+            • Nếu không ta chặt nhị phân trong đoạn hiện tại tìm điểm nhỏ nhất có k(x) = i. Sau đó thêm đoạn mới vào vector<br>
+            Mỗi giá trị i chỉ được push & pop một lần nên độ phức tạp của cấu trúc dữ liệu này là $O(n)$. Tuy nhiên ta còn thao
+            tác chặt nhị phân nên tổng độ phức tạp là $O(n.log_n)$
+        </div>
+    </div>
+</body>
+</html>
