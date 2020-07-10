@@ -22,13 +22,13 @@
         <div class = "problems">
             <h2>1D/1D optimization</h2>
             Phương pháp tối ưu qhđ có dạng: <br>
-            $$f(x) = {min}↙{i=0}↖{x-1} f(i) + w(i, x)$$<br>    
+            $f(x) = {min}↙{i=0}↖{x-1} f(i) + w(i, x)$<br>    
             Công thức khá quen thuộc với mọi người. Tuy nhiên, khi thoả mãn 1 số điều kiện, ta có thể giải bài toán 
             trong $O(n.log_n)$ <br>
             $$ ∀i &LessSlantEqual; j, w(i, j) + w(i + 1, j + 1) &LessSlantEqual; w(i + 1, j) + w(i, j + 1) $$ <br>
             Hay còn gọi là bất đẳng thức tứ giác.<br>
-            $$k(x) = arg {min}↙{i=0}↖{x-1} f(i) + w(i, x)$$ 
-            $$∀i &LessSlantEqual; j, k(i) &LessSlantEqual; k(j) $$ 
+            $k(x) = arg {min}↙{i=0}↖{x-1} f(i) + w(i, x)$ 
+            $∀i &LessSlantEqual; j, k(i) &LessSlantEqual; k(j) $ 
             Giả sử bất đẳng thức tứ giác được thoả mãn (ta có thể viết thử mấy giá trị của w).<br>
             Cách đơn giản nhất ta nghĩ đến để tối ưu f(x) là ta for từ k(x - 1) thay vì 1. Tuy nhiên, việc này chỉ làm
             giảm số hằng số, không làm giảm thời gian thực hiện thuật toán.<br>
