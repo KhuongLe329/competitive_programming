@@ -40,8 +40,63 @@
                 Sau khi tính được \(f[2]\), ta có thể duyệt lại toàn bộ \(x\), cập nhật lại \(k[x]\) xem \(2\) tốt hơn hay \(1\) tốt hơn. Nhưng 
                 có một <b>lưu ý</b> dãy \(k\) sẽ có dạng:
                 \[k = 11111111122222222222\]
-                Điều này có nghĩa là ta có thể chặt nhị phân tìm "điểm ngoặt" là điểm \(x\) nhỏ nhất thoả mãn \(k[x] = 2\). Sau đó, ta tính giá 
-                trị của \(f[3]\). Khi đó dãy \(k\) sẽ thuộc \(1\) trong \(2\) dạng sau
+                Điều này có nghĩa là ta có thể chặt nhị phân tìm "điểm ngoặt" của \(i\) là điểm \(x\) nhỏ nhất thoả mãn \(k[x] = i\) ở đây \(i = 2\) . Sau đó, ta tính giá 
+                trị của \(f[3]\). Khi đó dãy \(k\) sẽ thuộc \(1\) trong \(2\) dạng sau: 
+                \[k = 11111122222222233333\]
+                \[k = 11111111122222222222\]
+                Do đó, hướng tiếp cận của ta để cập nhật với \(f[3]\) như sau:<br>
+                <ul>
+                    <li>
+                        Kiểm tra \(x\) - "điểm ngoặt" của \(2\) xem nếu thay \(k[x] = 3\) có tốt hơn không.
+                        <ul>
+                            <li>Nếu nó tốt hơn, chặt nhị phân vùng có \(k[x'] = 1\) để tìm "điểm ngoặt", và gán cho 
+                                tất cả những phần tử phía sau \(k[x'] = 3\).
+                            </li>
+                            <li>
+                                Nếu không, chặt nhị phân vùng có \(k[x'] = 2\) để tìm "điểm ngoặt", và gán cho 
+                                tất cả những phần tử phía sau \(k[x'] = 3\).
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                Sau cùng, ta có thể tóm tắt lại thuật toán như sau.
+                <ul>
+                    <li>
+                        Dùng 1 vector lưu lại các "điểm ngoặt". Mỗi khi ta tính được giá trị \(f[i]\) ta 
+                        cập nhật lại vector.
+                        <ul>
+                            <li>Nếu \(i\) tốt hơn vector.back thì vector.pop_back</li>
+                            <li>
+                                Nếu không, chặt nhị phân trong đoạn hiện tại để tìm "điểm ngoặt" của \(i\), sau đó
+                                cho i và "điểm ngoặt" vào cuối vector
+                            </li>
+                        </ul>
+<pre class = "prettyprint linenums">
+    // Update new value x
+    vector<pair<int, int> > v; // start pos (turning point), best-k
+    v.push_back(make_pair(0, 0));
+    for (int i = v.size() - 1; i >= 0; --i) {
+        int y = v[i].first, oldk = v[i].second;
+        if (y > x && f[x] + w(x, y) < f[oldk] + w(oldk, y)) v.pop_back();
+        else {
+            int lo = y+1, hi = N+1;
+            while(lo < hi) {
+                int mid = (lo+hi)/2;
+                if (f[x] + w(x, mid) <= f[oldk] + w(oldk, mid))
+                    hi = mid;
+                else
+                    lo = mid+1;
+            }
+            if (hi != N+1) v.push_back(make_pair(hi, x));
+            break;
+        }
+    }
+    if (v.size() == 0) v.push_back(make_pair(0, x));
+</pre>
+                    </li>
+                </ul>
+                Bởi vì mỗi giá trị \(i\) chỉ được push & pop nhiều nhất một lần nên độ phức tạp của cấu trúc dữ liệu 
+                này là \(O(n)\). Tuy nhiên ta còn thao tác chặt nhị phân nên độ phức tạp là \(O(n.log_n)\)<br>
             </p>
         </div>
     </div>
