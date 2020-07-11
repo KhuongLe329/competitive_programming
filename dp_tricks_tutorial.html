@@ -72,9 +72,11 @@
                             </li>
                         </ul>
 <pre class = "prettyprint linenums">
-    // Update new value x
+    //init vector
     vector < pair < int, int > > v; // start pos (turning point), best-k
     v.push_back(make_pair(0, 0));
+    
+    // Update new value x 
     for (int i = v.size() - 1; i >= 0; --i) {
         int y = v[i].first, oldk = v[i].second;
         if (y > x && f[x] + w(x, y) < f[oldk] + w(oldk, y)) v.pop_back();
