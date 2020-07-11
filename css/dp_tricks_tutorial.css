@@ -1,37 +1,33 @@
 html, body {
-    font-family: 'Lora';
-    margin: 0px 0px 0px 0px;
-    line-height: 2;
+    font-family: 'sans-serif';
+    margin: 0;
+    background-color: #eeeeee;
 }
 
 .container {
-    display: flex;
-    background-color: hsl(214,11,23);
+    width: 80vw;
+    position: absolute;
+    left: 10vw;
 }
 
-.intro {
-    width: 20%;
-    height: 100vh;
-    background-color: rgb(36,41,48);
-    position: sticky;
-    justify-content: space-around;
+.header {
+    background-color: #353b43;
+    color: #57cc8a;
+    font-size: 30px;
+    margin: 0;
     text-align: center;
-    color: rgb(87,204,138);
-    top: 0px;
+    padding: 10px 0px 10px 0px;
+    position: sticky;
+    top: 0;
 }
 
-.ava img {
-    height: 250px;
-    width: 100%;
-}
-
-#quote {
-    text-shadow: 1px 1px azure;
-}
-
-.problems {
-    width: 80%;
-    background-color: rgb(53,59,67);
-    color: white;
-    padding-left: 20px;
+.main {
+    border-radius: 15px;
+    box-shadow: 5px 5px 5px #353b43;
+    width: 76vw;
+    height: auto;
+    margin-top: 20px;
+    background-color: white;
+    font-size: 20px;
+    padding: 15px 2vw 15px 2vw;
 }
