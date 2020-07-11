@@ -5,55 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Competitive programming</title>
     <link href="css/dp_tricks_tutorial.css" rel = "stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://mathscribe.com/mathscribe/jqmath-0.4.3.css" />
-    <script src="https://mathscribe.com/mathscribe/jqmath-etc-0.4.3.min.js"></script>
+    <link href="highlighter/style.css" rel = "stylesheet">
+    <script src="highlighter/prettify.js"></script>
+    <link rel="stylesheet" href="katex/katex.css">
+    <script src="katex/katex.js"></script>
+    <script src="katex/contrib/auto-render.js"></script>
 </head>
 <body>
     <div class = "container">
-        <div class = "intro">
-            <div class = "ava">
-                <img src = "img/ava.jpg">
-            </div>
-            <h2>CSP </h2>
-            <p id = "quote">CẦN CÙ BÙ SIÊNG NĂNG</p>
+        <div class = "header">
+            Make our school strong again
         </div>
-        <div class = "problems">
-            <h2>1D/1D optimization</h2>
-            Phương pháp tối ưu qhđ có dạng: <br>
-            $$f(x) = {min}↙{i=0}↖{x-1} f(i) + w(i, x)$$<br>    
-            Công thức khá quen thuộc với mọi người. Tuy nhiên, khi thoả mãn 1 số điều kiện, ta có thể giải bài toán 
-            trong $O(n.log_n)$ <br>
-            $$ ∀i &LessSlantEqual; j, w(i, j) + w(i + 1, j + 1) &LessSlantEqual; w(i + 1, j) + w(i, j + 1) $$ <br>
-            Hay còn gọi là bất đẳng thức tứ giác.<br>
-            $$k(x) = arg {min}↙{i=0}↖{x-1} f(i) + w(i, x)$$ 
-            $$∀i &LessSlantEqual; j, k(i) &LessSlantEqual; k(j) $$ 
-            Giả sử bất đẳng thức tứ giác được thoả mãn (ta có thể viết thử mấy giá trị của w).<br>
-            Cách đơn giản nhất ta nghĩ đến để tối ưu f(x) là ta for từ k(x - 1) thay vì 1. Tuy nhiên, việc này chỉ làm
-            giảm số hằng số, không làm giảm thời gian thực hiện thuật toán.<br>
-            Ta vẫn luôn nghĩ "với mỗi x, k(x) là bao nhiêu?" Nhưng giờ hãy nghĩ "với mỗi i, những giá trị x nào cho ta
-            k(x) = i?"<br>
-            Ban đầu, chưa có thông tin gì nên mọi x đều có k(x) = 1.
-            <br>k = 1111111111111111111111111111111111111111111<br>
-            Sau khi ta tính f(2), chúng ta có thể duyệt lại các x, cập nhật lại k(x) xem 2 tốt hơn hay 1 tốt hơn. Nhưng
-            lưu ý dãy k sẽ có dạng
-            <br>k = 1111111111111111222222222222222222222222222<br>
-            Điều này có nghĩa là ta có thể chặt nhị phân điểm nhỏ nhất có k(x) = i. Sau đó ta tính giá trị f(3) và cập nhật 
-            lại dãy k. Khi đó dãy k sẽ có 1 trong 2 dạng sau:
-            <br>k = 1111111111133333333333333333333333333333333<br>
-            k = 1111111111111111222222222223333333333333333<br>
-            Do đó các việc cần làm khi cập nhật k với f(3) là:<br>
-            • Kiểm tra xem giá trị x đầu tiên mà k(x) = 2 thay bằng 3 có tốt hơn không <br>
-            • Nếu nó tốt hơn, chặt nhị phân trong vùng k(x) = 1, tìm điểm x đầu tiên sao cho k(x) = 3 tốt hơn k(x) = 1.<br>
-            • Nếu không, chặt nhị phân vùng k(x) = 2.<br>
-            Ta có thể tóm tắt thuật toán như sau. Ta dùng 1 vector để lưu lại giá trị x đầu tiên của mỗi đoạn sao cho k(x) &NotEqual; 
-            k(x - 1). Sau khi ta tính giá trị f(i) ta cập nhật lại vector: <br>
-            • Nếu giá trị i mới tốt hơn vector.back thì vector.pop_back <br>
-            • Nếu không ta chặt nhị phân trong đoạn hiện tại tìm điểm nhỏ nhất có k(x) = i. Sau đó thêm đoạn mới vào vector<br>
-            Mỗi giá trị i chỉ được push & pop một lần nên độ phức tạp của cấu trúc dữ liệu này là $O(n)$. Tuy nhiên ta còn thao
-            tác chặt nhị phân nên tổng độ phức tạp là $O(n.log_n)$
+        <div class = "main">
+            <div style="text-align: center;">
+                <h2>1D/1D optimization</h2>
+            </div>
+            <p>
+                Phương pháp tối ưu qhđ có dạng:
+                \[f[x] = \displaystyle\min_{i=0}^{x-1} f[i] + w[i, x]\]
+                Công thức này khá quen thuộc với mọi người và giải với độ phức tạp \(O(n^2)\) tuy nhiên khi 
+                thoả mãn một số điều kiện thì có thể giải trong \(O(n. \log_n) \).
+                \[ \forall i \le j, w[i, j] + w[i + 1, j + 1] \le w[i, j + 1] + w[i + 1,j] \]
+                Điều kiện trên có tên quen thuộc hơn là bất đẳng thức tứ giác.
+                \[ k[x] = \displaystyle\argmin_{i=0}^{x-1} f[i] + w[i, x] \]
+                \[ \forall i \le j, k[i] \le k[j] \]
+                Giả sử bất đẳng thức tứ giác được thoả mãn (ta có thể viết thử mấy giá trị của \(w\)).<br>
+                Cách đơn giản nhất để tận dụng sự đơn điệu trên \(k\) khi tính \(f[x]\) đó chính là ta duyệt từ \(k[x - 1]\)
+                thay vì \(1\). Tuy nhiên việc này chỉ làm giảm hằng số tính toán, không làm giảm thời gian tính toán.<br>
+                Cho đến giờ, ta luôn nghĩ theo hướng "Với mỗi \(x\), giá trị của \(k[x]\) là bao nhiêu?". Giờ chúng ta 
+                thử suy nghĩ theo hướng "Với mỗi \(i\), có những giá trị \(x\) nào mà \(k[x]\) = \(i\)?"<br>
+                Ban đầu, chưa có thông tin gì nên mọi \(x\) đều có \(k[x] = 1\).<br>
+                \[k = 11111111111111111111\]
+                Sau khi tính được \(f[2]\), ta có thể duyệt lại toàn bộ \(x\), cập nhật lại \(k[x]\) xem \(2\) tốt hơn hay \(1\) tốt hơn. Nhưng 
+                có một <b>lưu ý</b> dãy \(k\) sẽ có dạng:
+                \[k = 11111111122222222222\]
+                Điều này có nghĩa là ta có thể chặt nhị phân tìm "điểm ngoặt" là điểm \(x\) nhỏ nhất thoả mãn \(k[x] = 2\). Sau đó, ta tính giá 
+                trị của \(f[3]\). Khi đó dãy \(k\) sẽ thuộc \(1\) trong \(2\) dạng sau
+            </p>
         </div>
     </div>
+    <script>prettyPrint();</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+    <script src="js/dp_tricks_tutorial.js"></script>
 </body>
 </html>
