@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitive programming</title>
+    <link href="css/dp_tricks_tutorial.css" rel = "stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="highlighter/style.css" rel = "stylesheet">
+    <script src="highlighter/prettify.js"></script>
+    <link rel="stylesheet" href="katex/katex.css">
+    <script src="katex/katex.js"></script>
+    <script src="katex/contrib/auto-render.js"></script>
+</head>
+<body>
+    <div class = "container">
+        <div class = "header">
+            Make our school strong again
+        </div>
+        <div class = "main">
+            <div style="text-align: center;">
+                <h2>Đường đi ngắn thứ \(k\)</h2>
+            </div>
+            Cho một đồ thị có hướng, gồm \(n\) đỉnh và \(m\) cạnh, yêu cầu tìm đường dẫn ngắn thứ \(k\) từ \(s\)
+            đến \(t\).
+            <ul>
+                <li>
+                    <b>Thuật toán đơn thuần \(O(n.k.log_n)\)</b><br><br>
+                    Khi ta đi đến một điểm \(x\), ta định nghĩa chi phí tại \(x\), \(f[x] = g[x] + h[x]\), trong đó
+                    \(g[x]\) là độ dài đường đi thực tế từ \(s \rightsquigarrow x\), \(h[x]\) là độ dài đường đi ngắn 
+                    nhất từ \(x \rightsquigarrow t\). Với việc sử dụng <b>priority_queue</b>, ở mỗi trạng thái lấy ra
+                    một cặp trạng thái \((x, f[x])\), ta lấy ra được con đường từ \(s \rightsquigarrow t\) tốt nhất 
+                    đi qua \(x\).<br>
+                    Khi đó kết quả của bài là lần thứ \(k\) ta lấy ra đỉnh \(t\). Dễ thấy để có được\(f[x]\) nhanh, ta 
+                    lưu lại trong <b>pq</b> một cặp \((x, g[x])\) và tính trước \(h[x]\) bằng cách dijkstra ngược từ \(t\).
+<pre class = "prettyprint linenums"> 
+    struct node {
+        int x, v;
+        node(int x = 0, int v = 0): x(x), v(v) {}
+        bool operator<(node a) const { return v + H[x] > a.v + H[a.x]; }
+    };
+    priority_queue < node > q;
+    q.emplace(s, 0);
+    while(q.size()) {
+        node top = q.top(), q.pop();
+        ++cnt[top.x];
+        if(top.x == t && cnt[top.x] == k) {
+            cout << top.v;
+            return 0;
+        }
+        if(cnt[top.x] > k) continue;
+        for(auto e: adj[top.x]) { /// pair(v, w)
+            q.emplace(e.fi, e.se + top.v);
+        }
+    }
+    cout << "-1";
+</pre>
+                </li>
+                <br>
+                <li>
+                    <b>Thuật toán \(O((n + k).log_n)\)</b><br><br>
+                    Yêu cầu trước khi đọc: #dijkstra, #leftistTree, #shortestPathTree
+                    <br><br>
+                    Trước tiên, ta dựng một cây đường đi ngắn nhất \(T\) bất kì có gốc là \(t\). Gọi độ dài 
+                    đường đi ngắn nhất từ \(x \rightsquigarrow t\) là \(dist_x\). <br>
+                    Xét một đường đi từ \(s \rightsquigarrow t\) là \(P\), gọi tập những cạnh thuộc \(P\) nhưng 
+                    không thuộc \(T\) là \(P'\).<br>
+                    Chúng ta sẽ xem xét một số tính chất của \(P'\): 
+                    <ol>
+                        <li>
+                            Xét cạnh \(e = \{u, v, w\} \notin T\), gọi chi phí tăng thêm khi sử dụng \(e\) là 
+                            \(\Delta e = dist_v + w - dist_u \). Khi đó, chi phí của con đường \(P\) là 
+                            \(L_P = dist_s + \displaystyle \sum_{ e \isin P'} \Delta e \)
+                        </li>
+                        <br>
+                        <li>
+                            Sắp xếp theo thứ tự từ \(s\) tới \(t\), xét \(2\) cạnh liên tiếp trên \(P'\), 
+                            ta có \(v_{e_i} = u_{e_{i + 1}}\) hoặc \(u_{e_{i + 1}}\) là tổ tiên của \(v_{e_i}\).
+                        </li>
+                        <br>
+                        <li>
+                            Đối với mỗi \(P'\) sẽ chỉ có duy nhất một đường đi \(S\) sao cho \(S' = P'\). Do chỉ tồn
+                            tại duy nhất một đường đi trên \(T\) giữa nút \(v_{e_i}\) và nút \(u_{e_{i + 1}}\) theo 
+                            tính chất trước.
+                        </li>
+                    </ol>
+                    <br>Chúng ta tổng kết lại từ các tính chất trên: <br>
+                    <ul>
+                        <li>Tính chất \(1\) cho ta biết cách tính \(L_P\) từ \(P'\)</li>
+                        <li>Tính chất \(2\) cho ta biết cách dựng được một tập \(P'\) đúng (sau khi sắp xếp) </li>
+                        <li>Tính chất \(3\) cho ta biết mỗi \(P'\) chỉ có duy nhất một \(P\)</li>
+                    </ul>
+                    <br> Bài toán bây giờ chuyển thành tìm tập \(P'\) có \(L_P\) bé thứ \(k\) sao cho thoả mãn 
+                    tính chất \(2\)<br><br>
+                    \(\bigstar\) Mô tả thuật toán: <br><br>
+                    Do tính chất \(2\), ta có thể lưu lại cạnh cuối cùng và \(L_P\) thể hiện một tập cạnh \(P'\) và duy trì
+                    nó bằng <b>pq</b>. Ban đầu, ta sẽ cho vào <b>pq</b> cạnh có \(\Delta e\) nhỏ nhất, sao cho cạnh được thêm vào có 
+                    đỉnh \(u_e\) nằm trên đường đi từ \(s \rightsquigarrow t\) trên cây \(T\). Chúng ta xem xét cách tạo ra 
+                    đường đi tiềm năng khi lấy ra đường đi ngắn nhất hiện tại (dựa vào tính chất \(2\)):
+                    <ol>
+                        <li>
+                            Lấy cạnh có \(\Delta e\) nhỏ nhất sao cho \(u_{e_{i + 1}} = v_{e_i}\).
+                        </li>
+                        <li>
+                            Lấy cạnh có \(\Delta e\) nhỏ nhất sao cho \(u_{e_{i + 1}}\) là tổ tiên trên \(T\) của \(v_{e_i}\).
+                        </li>
+                    </ol> 
+                    Dễ thấy khi chúng ta lấy ra \(k - 1\) lần từ heap ta sẽ được đường đi ngắn thứ \(k\).<br>
+                    Để cải tiến thuật toán này thì ta sẽ sử dụng cách chuyển trạng thái bằng cách sử dụng Leftist Heap.
+                    Ban đầu, mỗi nút \(x\) ta lưu lại trong heap của nó cặp giá trị \(e\) sao cho \(u_e = x\) và \(\Delta e\).
+                    Bây giờ để dễ dàng truy vấn và lấy thông tin từ tổ tiên ta phải hợp heap của \(x\) và heap của \(parent[x]\).
+                    Thao tác hợp này ta giống như thao tác persistent và chỉ tạo ra thêm \(log_n\) nút do tính chất của 
+                    Leftist Heap. Bây giờ, trong <b>priority_queue</b> ta sẽ lưu thêm nút trên Leftist Heap của cạnh cuổi cùng của \(P'\). 
+                    <ul>
+                        <li>Cách chuyển \(2\) tương đương việc ta lấy \(2\) con trái và con phải của nút Leftist Heap hiện tại </li>
+                        <li>Cách chuyển \(1\) tương đương việc ta lấy \(heap[v_{e_i}].top\) </li>
+                    </ul>
+                    <pre class = "prettyprint linenums">
+  struct node {
+    int x, v;
+    node* operator=(node a) {
+       x = a.x;
+       v = a.v;
+       return this;
+    }
+    bool operator<(node a) const { return v > a.v; }
+  } a;
+  priority_queue<node> Q;
+  struct LeftistTree {
+    int cnt, rt[maxn], lc[maxn * 20], rc[maxn * 20], dist[maxn * 20];
+    node v[maxn * 20];
+    LeftistTree() { dist[0] = -1; }
+    int newnode(node w) {
+        cnt++;
+        v[cnt] = w;
+        return cnt;
+    }
+    int merge(int x, int y) {
+        if (!x || !y) return x + y;
+        if (v[x] < v[y]) swap(x, y);
+        int p = ++cnt;
+        lc[p] = lc[x];
+        v[p] = v[x];
+        rc[p] = merge(rc[x], y);
+        if (dist[lc[p]] < dist[rc[p]]) swap(lc[p], rc[p]);
+        dist[p] = dist[rc[p]] + 1;
+        return p;
+    }
+  } st;
+  /// tự dựng cây T sau đó là leftist heap, dist[] cho mỗi nút
+  if (st.rt[s]) Q.push({st.rt[s], dist[s] + st.v[st.rt[s]].v});
+  while (!Q.empty()) {
+    a = Q.top();
+    Q.pop();
+    cnt++;
+    if (cnt == k - 1) {
+      cout << a.v;
+      return 0;
+    }
+    if (st.lc[a.x])
+      Q.push({st.lc[a.x], a.v - st.v[a.x].v + st.v[st.lc[a.x]].v});
+    if (st.rc[a.x])
+      Q.push({st.rc[a.x], a.v - st.v[a.x].v + st.v[st.rc[a.x]].v});
+    x = st.rt[st.v[a.x].x];
+    if (x) Q.push({x, a.v + st.v[x].v});
+  }
+  cout << "-1";</pre>
+                    <br>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>prettyPrint();</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+</body>
+</html>
